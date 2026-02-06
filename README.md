@@ -1,105 +1,215 @@
-1. OBJECTIVE:
-The goal of this project is to create and deploy an end-to-end fraud detection system that replicates actual digital payment behavior using artificially generated transaction data.
-This evaluation assesses the capacity to:
+# Fraud Detection System
 
-- Describe a practical machine learning issue.
-- Create accurate synthetic data
-- Create significant behavioral characteristics.
-- Select and use appropriate machine learning techniques.
-- Correctly assess models for data that is unbalanced.
-- Clearly and intuitively describe the model's predictions.
+An end-to-end machine learning system for detecting fraudulent transactions in digital payment platforms using synthetic transaction data and behavioral pattern analysis.
 
-2. PROBLEM STATEMENT:
-Every day, digital payment platforms handle a huge volume of transactions. Since fraudulent transactions are uncommon but expensive, identifying them is crucial. Real fraud datasets are frequently unavailable due to security and privacy issues. Thus, a realistic fraud detection pipeline is simulated in this project by:
+## 🎯 Project Overview
 
-- Creating fake transaction information
-- Including realistic fraud patterns
-- Identifying fraudulent transactions through machine learning model training and evaluation
-- Building a system that can consistently identify suspicious transactions while still being understandable and useful is the aim.
+This project demonstrates a complete fraud detection pipeline that:
+- Generates realistic synthetic transaction data with authentic behavioral patterns
+- Engineers meaningful features from raw transaction data
+- Trains machine learning models (Random Forest and Graph-based approaches)
+- Evaluates models on imbalanced datasets using appropriate metrics
+- Provides interpretable fraud predictions
 
-3. CREATION OF SYNTHETIC DATASET
-3.1 Overview of the Dataset
-To mimic transaction behavior in the real world, a synthetic dataset was created. Among the entities were:
+**Key Statistics:**
+- 15,000 synthetic transactions
+- 3% fraud rate (imbalanced dataset)
+- 5 distinct fraud patterns incorporated
+- Multiple feature engineering techniques applied
 
-- Users (accounts)
-- Transactions with Merchants
-- Fields for transactions:
-- transaction_id
-- user_id
-- merchant_id
-- amount, payment method, location, timestamp, and device ID
-- is_fraud (label)
+## 📊 Dataset & Fraud Patterns
 
-3.2 Features of the Dataset
-15,000 transactions in total
-Rate of fraud: == 3% (unbalanced)
-Time-ordered: Transactions are produced in the order they occur.
-Non-random fraud: Behavioral patterns are followed by fraud labels
-In order to replicate a real-time payment system, transaction amounts have a right-skewed distribution and timestamps advance in a realistic manner.
+### Synthetic Dataset
+The project creates a realistic transaction dataset with:
+- **Users/Accounts**: Multiple user profiles with varying transaction behaviors
+- **Merchants**: Different merchant categories and transaction preferences
+- **Fields**: transaction_id, user_id, merchant_id, amount, payment_method, location, timestamp, device_id, is_fraud
+- **Distribution**: Time-ordered, right-skewed transaction amounts, realistic timestamps
 
+### Fraud Patterns Injected
+1. **Transaction Velocity**: Multiple transactions in short timeframe (bot attacks)
+2. **Amount Spikes**: Sudden unusually high transactions (account takeover)
+3. **Location Inconsistency**: Rapid location changes (credential compromise)
+4. **Device Abuse**: Same device used by multiple users (fraud rings)
+5. **Merchant Abuse**: Repeated transactions with suspicious merchants (fake merchants)
 
-4. FRAUD PATTERN DESIGN:
-Fraud was intentionally injected using detectable and realistic behavioral patterns, rather than random labeling.
+These patterns are behavioral-driven and reflect real-world fraud tactics.
 
-4.1 Fraud Patterns Introduced
-- Transaction velocity = Multiple transactions in short time = Bot attacks 
-- Amount spikes = Sudden unusually high transaction = Account takeover
-- Location inconsistency = Sudden location changes = Credential compromise
-- Shared devices = Same device used by many users = Fraud rings
-- Merchant abuse = Repeated transactions with same merchant = Fake  merchants
+## 🔧 Feature Engineering
 
-4.2 Why These Patterns Are Realistic
-In real payment systems, fraud is usually behavior-driven and often involves reuse of infrastructure (devices, merchants, accounts). These patterns reflect common tactics used by fraudsters and create meaningful signals for detection.
+Raw transaction fields are enhanced with:
+- **User transaction count**: Transaction frequency per user
+- **User average amount**: Baseline spending behavior
+- **Amount deviation**: Detection of abnormal spending patterns
+- **Device user count**: Identification of shared devices
+- **Graph metrics**: Device and merchant network degrees
+- **Categorical encoding**: One-hot encoding for payment methods and merchants
 
+## 🤖 Models
 
-5. FEATURE ENGINEERING(FE):
-Raw transaction fields alone are insufficient for fraud detection. Therefore, multiple behavioral and relational features were engineered.
+### Random Forest Classifier
+- Non-linear pattern capture
+- Robust to noise and outliers
+- Built-in feature importance
+- Balanced class weights to handle imbalance
 
-Features
-- User transaction count --> Captures transaction frequency
-- User average amount -->	Baseline spending behavior
-- Amount deviation	--> Detects abnormal spending
-- Device user count	--> Identifies shared devices
-- Encoded categorical variables	--> Enables ML compatibility
+### Graph-Based Approach
+- **Nodes**: Users, Devices, Merchants
+- **Edges**: Transactions linking entities
+- Captures coordinated fraud patterns
+- Structural anomaly detection
 
+## 📈 Evaluation Metrics
 
-6. MODEL DEVELOPMENT:
-6.1 Baseline Model Selection
-Random Forest classifier:
-- Strong performance on tabular data
-- Ability to capture non-linear patterns
-- Robustness to noise and outliers
-- Built-in feature importance for explainability
-- Class imbalance was handled using balanced class weights.
+- **Precision**: True positive rate among predicted frauds
+- **Recall**: Fraud detection rate
+- **F1-Score**: Harmonic mean of precision and recall
+- **ROC-AUC**: Model discrimination ability
+- **Confusion Matrix**: Detailed classification breakdown
 
-6.2 Graph-Based 
-To capture relationship-driven fraud, a graph-based approach is taken.
-Graph Construction
+## 📁 Project Structure
 
-- Nodes: Users, Devices, Merchants
-- Edges: Transactions linking these entities
+```
+fraud-detection/
+├── main/
+│   └── fraud_detection.ipynb          # Main analysis and modeling notebook
+├── src/
+│   ├── data_generation.py             # Synthetic data generation
+│   ├── fraud_patterns.py              # Fraud pattern injection logic
+│   ├── feature_engineering.py         # Feature creation and transformation
+│   ├── model.py                       # Model training and prediction
+│   ├── graph.py                       # Graph-based feature engineering
+│   ├── evaluation.py                  # Model evaluation and metrics
+│   └── __init__.py
+├── data/
+│   ├── raw/
+│   │   └── transactions_raw.csv       # Generated synthetic transactions
+│   └── processed/
+│       └── transactions_features.csv  # Feature-engineered dataset
+├── results/                            # Model outputs and visualizations
+├── requirements.txt                    # Python dependencies
+└── README.md                          # This file
+```
 
-Graph Features Added
-- Device graph degree
-- Merchant graph degree
+## 🚀 Getting Started
 
+### Prerequisites
+- Python 3.7+
+- pip
 
-7. EVALUATION OF MODEL:
-7.1 Metrics Used
-- Precision
-- Recall
-- F1-score
-- ROC-curve
-- Confusion matrix
+### Installation
 
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/fraud-detection.git
+cd fraud-detection
+```
 
-8. FINAL RESULTS/ OUTCOMES:
+2. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-- Behavioral features significantly improve fraud detection
-- Graph-based features enhance detection of coordinated fraud
-- Time-aware modeling prevents data leakage
-- Simple models with strong features outperform complex approaches
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
+### Running the Project
 
-9. CONCLUSION:
-This project demonstrates a clean, explainable, and realistic fraud detection pipeline, emphasizing strong ML fundamentals. By combining behavioral features with graph-based reasoning, the system effectively identifies both individual and organized fraud patterns while remaining interpretable and practical.
+1. **Generate synthetic data and train models:**
+   - Open `main/fraud_detection.ipynb` in Jupyter Notebook/Lab
+   - Run all cells to execute the complete pipeline
+
+2. **Key outputs:**
+   - `data/raw/transactions_raw.csv`: Generated synthetic transactions
+   - `data/processed/transactions_features.csv`: Feature-engineered data
+   - Model performance metrics and visualizations in the notebook
+
+## 📚 Key Components
+
+### `src/data_generation.py`
+Generates synthetic transaction data with realistic patterns:
+- User and merchant creation
+- Transaction amount distribution
+- Timestamp generation
+- Random fraud assignment
+
+### `src/fraud_patterns.py`
+Injects realistic fraud patterns:
+- Velocity-based fraud
+- Amount spike detection
+- Location anomalies
+- Device sharing patterns
+- Merchant abuse scenarios
+
+### `src/feature_engineering.py`
+Creates behavioral features from raw data:
+- Aggregation features (counts, averages)
+- Statistical features (deviations, z-scores)
+- Categorical encoding
+- Temporal features
+
+### `src/model.py`
+Model training and evaluation:
+- Random Forest classifier setup
+- Hyperparameter tuning
+- Cross-validation
+- Prediction generation
+
+### `src/graph.py`
+Graph-based feature engineering:
+- Network construction
+- Graph degree calculation
+- Community detection (optional)
+
+### `src/evaluation.py`
+Comprehensive model evaluation:
+- Classification metrics
+- ROC-AUC calculations
+- Confusion matrix generation
+- Performance visualization
+
+## 📊 Results & Findings
+
+- **Behavioral features** significantly improve fraud detection performance
+- **Graph-based features** enhance detection of coordinated fraud patterns
+- **Time-aware modeling** prevents data leakage and ensures realistic evaluation
+- **Balanced metrics** (F1-score, precision-recall) are crucial for imbalanced datasets
+
+## 🔍 Model Interpretability
+
+The model provides:
+- Feature importance scores from Random Forest
+- Clear patterns in SHAP values for individual predictions
+- Behavioral signatures for different fraud types
+- Decision thresholds for fraud classification
+
+## 💡 Future Improvements
+
+- Real-time fraud scoring pipeline
+- Deep learning models (Neural Networks, LSTMs)
+- Ensemble methods combining multiple models
+- Adversarial fraud pattern generation
+- Production deployment with API
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👤 Author
+
+Your Name - Your Email/GitHub Profile
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Contact
+
+For questions or feedback, please open an issue in the repository.
+
+---
+
+**Note**: This project uses synthetic data for demonstration purposes. In production environments, ensure compliance with data privacy regulations and security best practices.
